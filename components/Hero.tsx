@@ -13,7 +13,9 @@ const Hero: React.FC<{onNavigate: (page: Page) => void}> = ({onNavigate}) => {
             Compare personalized loan offers from top lenders in minutes, without impacting your credit score. Our AI-powered platform makes finding the best rates simple and transparent.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <button className="bg-gradient-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow transform hover:-translate-y-0.5">
+            <button 
+              onClick={() => onNavigate('providers')}
+              className="bg-gradient-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow transform hover:-translate-y-0.5">
               Check My Rates
             </button>
             <button 
