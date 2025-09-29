@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo Loan Site - Loan Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-purple': '#6C47FF',
+              'brand-blue': '#4A80FF',
+              'dark-navy': '#0D1B3A',
+              'light-bg': '#F7F9FC',
+            },
+            backgroundImage: {
+               'gradient-primary': 'linear-gradient(90deg, #6C47FF 0%, #4A80FF 100%)',
+               'gradient-secondary': 'linear-gradient(90deg, #8A6DFF 0%, #6F9BFF 100%)',
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "name": "Demo Loan Site - Loan Comparison",
+  "description": "A modern web application that allows users to compare loan rates from various providers, find personalized offers, and explore different loan solutions. Built with React and Tailwind CSS for a sleek, responsive, and user-friendly experience.",
+  "requestFramePermissions": []
+}
