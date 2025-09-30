@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import LoanFinder from './components/LoanFinder';
+import ToolsHub from './components/ToolsHub';
 import HowItWorks from './components/HowItWorks';
 import Performance from './components/Performance';
 import Testimonials from './components/Testimonials';
@@ -39,12 +39,16 @@ import PersonalLoanInfo from './components/info/PersonalLoanInfo';
 import MortgageLoanInfo from './components/info/MortgageLoanInfo';
 import AutoLoanInfo from './components/info/AutoLoanInfo';
 import StudentLoanInfo from './components/info/StudentLoanInfo';
+import BusinessLoanInfo from './components/info/BusinessLoanInfo';
+import HomeEquityLoanInfo from './components/info/HomeEquityLoanInfo';
+import CreditHealthCenter from './components/CreditHealthCenter';
 
 export type Page =
   | 'home'
   | 'providers'
   | 'comparison'
   | 'calculators'
+  | 'credit-health'
   | 'mortgage-calculator'
   | 'auto-loan-calculator'
   | 'personal-loan-calculator'
@@ -68,15 +72,33 @@ export type Page =
   | 'personal-loan-info'
   | 'mortgage-loan-info'
   | 'auto-loan-info'
-  | 'student-loan-info';
+  | 'student-loan-info'
+  | 'business-loan-info'
+  | 'home-equity-loan-info';
+
+export interface LoanFilters {
+  searchQuery: string;
+  loanAmount: number;
+  loanPurpose: string;
+}
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [providersToCompare, setProvidersToCompare] = useState<Provider[]>([]);
+  const [activeFilters, setActiveFilters] = useState<LoanFilters>({
+    searchQuery: '',
+    loanAmount: 0,
+    loanPurpose: '',
+  });
 
   const handleNavigate = (page: Page) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
+  };
+  
+  const handleSearch = (filters: LoanFilters) => {
+    setActiveFilters(filters);
+    handleNavigate('providers');
   };
 
   const handleCompare = (providers: Provider[]) => {
@@ -96,11 +118,13 @@ const App: React.FC = () => {
   const renderPage = () => {
     switch (currentPage) {
       case 'providers':
-        return <AllProviders onCompare={handleCompare} />;
+        return <AllProviders onCompare={handleCompare} initialFilters={activeFilters} />;
       case 'comparison':
         return <ProviderComparison providers={providersToCompare} onClose={() => handleNavigate('providers')} onUpdateList={handleUpdateComparisonList} />;
       case 'calculators':
         return <CalculatorsHub onNavigate={handleNavigate} />;
+      case 'credit-health':
+        return <CreditHealthCenter onNavigate={handleNavigate} />;
       case 'mortgage-calculator':
         return <MortgageCalculator onNavigate={handleNavigate} />;
       case 'auto-loan-calculator':
@@ -149,13 +173,17 @@ const App: React.FC = () => {
         return <AutoLoanInfo onNavigate={handleNavigate} />;
       case 'student-loan-info':
         return <StudentLoanInfo onNavigate={handleNavigate} />;
+      case 'business-loan-info':
+        return <BusinessLoanInfo onNavigate={handleNavigate} />;
+      case 'home-equity-loan-info':
+        return <HomeEquityLoanInfo onNavigate={handleNavigate} />;
       case 'home':
       default:
         return (
           <>
             <Hero onNavigate={handleNavigate} />
-            <LoanFinder onNavigate={handleNavigate} />
-            <LoanSolutions onNavigate={handleNavigate} />
+            <ToolsHub onNavigate={handleNavigate} />
+            <LoanSolutions onNavigate={handleNavigate} onSearch={handleSearch} />
             <HowItWorks />
             <Performance />
             <Testimonials />

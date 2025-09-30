@@ -1,7 +1,6 @@
-import React from 'react';
-import { Page } from '../App';
+import React, { useState } from 'react';
+import { LoanFilters } from '../App';
 
-// FIX: Replaced JSX.Element with React.ReactElement to resolve "Cannot find namespace 'JSX'" error.
 const FeatureTag: React.FC<{ icon: React.ReactElement; text: string }> = ({ icon, text }) => (
   <div className="flex items-center space-x-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold">
     {icon}
@@ -38,7 +37,23 @@ const LenderCard: React.FC<{ name: string; rating: number; apr: string; amount: 
   </div>
 );
 
-const LoanFinder: React.FC<{ onNavigate: (page: Page) => void }> = ({ onNavigate }) => {
+const LoanFinder: React.FC<{ onSearch: (filters: LoanFilters) => void }> = ({ onSearch }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loanAmount, setLoanAmount] = useState('0');
+  const [loanPurpose, setLoanPurpose] = useState('');
+  
+  const handleCompare = () => {
+    onSearch({
+      searchQuery,
+      loanAmount: parseInt(loanAmount, 10),
+      loanPurpose,
+    });
+  };
+
+  const handleViewAll = () => {
+     onSearch({ searchQuery: '', loanAmount: 0, loanPurpose: '' });
+  };
+
   return (
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -48,34 +63,52 @@ const LoanFinder: React.FC<{ onNavigate: (page: Page) => void }> = ({ onNavigate
           <div className="grid md:grid-cols-4 gap-4 items-center">
             <div className="relative md:col-span-1">
               <svg className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-              <input type="text" placeholder="Search lenders..." className="w-full pl-12 pr-4 py-3 bg-white text-dark-navy placeholder-gray-400 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-purple focus:border-transparent"/>
+              <input 
+                type="text" 
+                placeholder="Search lenders..." 
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-white text-dark-navy placeholder-gray-400 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-purple focus:border-transparent"/>
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <span className="text-gray-500">$</span>
               </div>
-              <select className="w-full pl-8 pr-10 py-3 appearance-none bg-white text-dark-navy border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-purple focus:border-transparent">
-                <option>Loan Amount</option>
-                <option>$5,000</option>
-                <option>$10,000</option>
-                <option>$25,000</option>
+              <select 
+                value={loanAmount}
+                onChange={e => setLoanAmount(e.target.value)}
+                className="w-full pl-8 pr-10 py-3 appearance-none bg-white text-dark-navy border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-purple focus:border-transparent">
+                <option value="0">Loan Amount</option>
+                <option value="5000">$5,000</option>
+                <option value="10000">$10,000</option>
+                <option value="25000">$25,000</option>
+                <option value="50000">$50,000</option>
+                <option value="100000">$100,000+</option>
               </select>
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </div>
             </div>
              <div className="relative">
-                <select className="w-full px-4 py-3 appearance-none bg-white text-dark-navy border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-purple focus:border-transparent">
-                  <option>Loan Purpose</option>
-                  <option>Debt Consolidation</option>
-                  <option>Home Improvement</option>
-                  <option>Major Purchase</option>
+                <select 
+                  value={loanPurpose}
+                  onChange={e => setLoanPurpose(e.target.value)}
+                  className="w-full px-4 py-3 appearance-none bg-white text-dark-navy border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-purple focus:border-transparent">
+                  <option value="">Loan Purpose</option>
+                  <option value="Debt Consolidation">Debt Consolidation</option>
+                  <option value="Home Improvement">Home Improvement</option>
+                  <option value="Auto">Auto Loan</option>
+                  <option value="Student">Student Loan</option>
+                  <option value="Business">Business Loan</option>
+                  <option value="Personal">General Personal Loan</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </div>
             </div>
-            <button className="w-full md:col-span-1 bg-gradient-primary text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center justify-center space-x-2">
+            <button 
+              onClick={handleCompare}
+              className="w-full md:col-span-1 bg-gradient-primary text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center justify-center space-x-2">
               <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" /></svg>
               <span>Compare Rates</span>
             </button>
@@ -92,7 +125,7 @@ const LoanFinder: React.FC<{ onNavigate: (page: Page) => void }> = ({ onNavigate
           <LenderCard name="JPMorgan Chase" rating={4.2} apr="6.99% - 24.99%" amount="$1,000 - $50,000" time="Same Day" reviews="22,000" tags={['Competitive rates', 'Fast approval']} />
         </div>
         <button 
-          onClick={() => onNavigate('providers')}
+          onClick={handleViewAll}
           className="mt-12 bg-white text-gray-700 font-bold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-300 flex items-center mx-auto">
           View All Lenders
           <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>

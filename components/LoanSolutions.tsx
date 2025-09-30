@@ -1,166 +1,169 @@
-import React, { useState } from 'react';
-import { Page } from '../App';
+import React from 'react';
+import { Page, LoanFilters } from '../App';
 
-type LoanCategory = 'Personal Loans' | 'Mortgage' | 'Auto Loans' | 'Student Loans';
-
-interface LoanSolutionData {
-    id: LoanCategory;
+interface LoanData {
     title: string;
-    icon: React.ReactElement;
     description: string;
-    benefits: string[];
-    topProviders: {
-        name: string;
-        logoBg: string;
-        logoContent: string;
-        apr: string;
-        amount: string;
-    }[];
-    cta: {
-        text: string;
-        page: Page;
+    icon: React.ReactElement;
+    features: string[];
+    startingApr: string;
+    page: Page;
+    isMostPopular: boolean;
+    colors: {
+        iconBg: string;
+        borderBg: string;
     };
 }
 
-const tabData: LoanSolutionData[] = [
+const loanData: LoanData[] = [
     {
-        id: 'Personal Loans',
         title: 'Personal Loans',
-        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>,
-        description: "Flexible financing for debt consolidation, home improvements, medical expenses, or any major goal with competitive rates and fast approval.",
-        benefits: ["No collateral required", "Fixed interest rates", "Quick funding times", "Flexible repayment terms"],
-        topProviders: [
-            { name: 'SoFi', logoBg: 'bg-teal-500', logoContent: 'S', apr: '8.99% - 29.49%', amount: '$5k - $100k' },
-            { name: 'Upstart', logoBg: 'bg-gray-700', logoContent: 'U', apr: '6.5% - 35.99%', amount: '$1k - $50k' },
-            { name: 'Marcus', logoBg: 'bg-blue-900', logoContent: 'M', apr: '6.99% - 19.99%', amount: '$3.5k - $40k' }
-        ],
-        cta: { text: 'Read More', page: 'personal-loan-info' }
+        description: 'Flexible financing for debt consolidation, home improvements, medical expenses, or any personal goal with competitive rates and fast approval.',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" /></svg>,
+        features: ['No collateral', 'Quick funding', 'Fixed rates', 'Flexible terms'],
+        startingApr: '5.99%',
+        page: 'personal-loan-info',
+        isMostPopular: true,
+        colors: {
+            iconBg: 'bg-blue-500',
+            borderBg: 'bg-gradient-to-r from-orange-400 to-yellow-400',
+        },
     },
     {
-        id: 'Mortgage',
-        title: 'Mortgage',
-        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>,
-        description: "Find competitive rates on home purchases, refinancing, and home equity products with expert guidance and personalized service.",
-        benefits: ["Low interest rates", "Long repayment terms", "Tax deductible interest", "Builds home equity"],
-        topProviders: [
-            { name: 'Rocket Mortgage', logoBg: 'bg-red-500', logoContent: 'R', apr: '6.5% - 8.5%', amount: '$50k - $3M' },
-            { name: 'Better.com', logoBg: 'bg-blue-500', logoContent: 'B', apr: '6.25% - 8.5%', amount: '$100k - $3M' },
-            { name: 'loanDepot', logoBg: 'bg-gray-800', logoContent: 'lD', apr: '6.75% - 8.75%', amount: '$75k - $2.5M' }
-        ],
-        cta: { text: 'Read More', page: 'mortgage-loan-info' }
+        title: 'Mortgage Loans',
+        description: 'Find competitive rates on home purchases, refinancing, and home equity products with expert guidance and personalized service.',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>,
+        features: ['Low rates', 'Tax benefits', 'Long terms', 'Expert guidance'],
+        startingApr: '6.50%',
+        page: 'mortgage-loan-info',
+        isMostPopular: false,
+        colors: {
+            iconBg: 'bg-green-500',
+            borderBg: 'bg-gradient-to-r from-green-400 to-emerald-400',
+        },
     },
     {
-        id: 'Auto Loans',
         title: 'Auto Loans',
-        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
-        description: "Drive away in your dream car with financing for new and used vehicles, featuring competitive rates and flexible terms.",
-        benefits: ["New & used vehicles", "Quick approval process", "Flexible loan terms", "Builds credit"],
-        topProviders: [
-            { name: 'Capital One', logoBg: 'bg-blue-300', logoContent: 'C', apr: '4.99% - 19.99%', amount: '$4k - $100k' },
-            { name: 'LightStream', logoBg: 'bg-teal-400', logoContent: 'L', apr: '6.24% - 25.49%', amount: '$5k - $100k' },
-            { name: 'CarMax', logoBg: 'bg-yellow-500', logoContent: 'C', apr: '6.99% - 25%', amount: '$5k - $100k' }
-        ],
-        cta: { text: 'Read More', page: 'auto-loan-info' }
+        description: 'Drive away in your dream car with financing for new and used vehicles, featuring competitive rates and flexible terms.',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
+        features: ['New & used', 'Builds credit', 'Quick approval', 'Own your car'],
+        startingApr: '4.50%',
+        page: 'auto-loan-info',
+        isMostPopular: false,
+        colors: {
+            iconBg: 'bg-purple-500',
+            borderBg: 'bg-gradient-to-r from-purple-400 to-pink-400',
+        },
     },
     {
-        id: 'Student Loans',
+        title: 'Business Loans',
+        description: 'Fuel your business growth with funding options for entrepreneurs and established companies seeking capital expansion.',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
+        features: ['Large amounts', 'Growth funding', 'Tax deductible', 'Flexible use'],
+        startingApr: '7.00%',
+        page: 'business-loan-info',
+        isMostPopular: false,
+        colors: {
+            iconBg: 'bg-orange-500',
+            borderBg: 'bg-gradient-to-r from-orange-400 to-red-400',
+        },
+    },
+    {
         title: 'Student Loans',
-        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z" /></svg>,
-        description: "Finance your education with competitive rates and flexible repayment options designed for students and families.",
-        benefits: ["Deferred payments", "Forgiveness options", "Low interest rates", "Education focus"],
-        topProviders: [
-            { name: 'College Ave', logoBg: 'bg-blue-300', logoContent: 'C', apr: '3.5% - 12.99%', amount: '$1k - $100k' },
-            { name: 'Sallie Mae', logoBg: 'bg-blue-300', logoContent: 'S', apr: '4% - 13%', amount: '$1k - $100k' },
-            { name: 'Discover', logoBg: 'bg-orange-500', logoContent: 'D', apr: '4% - 14%', amount: '$1k - $100k' }
-        ],
-        cta: { text: 'Read More', page: 'student-loan-info' }
-    }
+        description: 'Finance your education with competitive rates and flexible repayment options designed for students and families.',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z" /></svg>,
+        features: ['Deferred payments', 'Forgiveness options', 'Low rates', 'Education focus'],
+        startingApr: '3.73%',
+        page: 'student-loan-info',
+        isMostPopular: false,
+        colors: {
+            iconBg: 'bg-indigo-500',
+            borderBg: 'bg-gradient-to-r from-blue-400 to-indigo-400',
+        },
+    },
+    {
+        title: 'Home Equity Loans',
+        description: 'Access the equity in your home for major expenses, debt consolidation, or home improvements with competitive rates.',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+        features: ['Use home equity', 'Tax benefits', 'Lower rates', 'Large amounts'],
+        startingApr: '8.25%',
+        page: 'home-equity-loan-info',
+        isMostPopular: false,
+        colors: {
+            iconBg: 'bg-teal-500',
+            borderBg: 'bg-gradient-to-r from-teal-400 to-cyan-400',
+        },
+    },
 ];
 
-const LoanSolutions: React.FC<{onNavigate: (page: Page) => void}> = ({ onNavigate }) => {
-  const [activeTab, setActiveTab] = useState<LoanCategory>('Personal Loans');
+const LoanCard: React.FC<{ data: LoanData; onNavigate: (page: Page) => void; onSearch: (filters: LoanFilters) => void; }> = ({ data, onNavigate, onSearch }) => {
+    const handleExploreClick = () => {
+        onSearch({ searchQuery: '', loanAmount: 0, loanPurpose: data.title });
+    };
 
-  const activeTabData = tabData.find(tab => tab.id === activeTab);
+    return (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col p-6 pt-0 relative overflow-hidden h-full hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+            <div className={`h-1.5 w-full ${data.colors.borderBg} mb-5`}></div>
+            
+            {data.isMostPopular && (
+                <div className="absolute top-4 -left-10 bg-orange-500 text-white text-xs font-bold px-10 py-1.5 transform -rotate-45 shadow-md">
+                    Most Popular
+                </div>
+            )}
 
+            <div className="absolute top-4 right-4 bg-green-100/80 backdrop-blur-sm text-green-800 text-sm font-bold px-3 py-1.5 rounded-full border border-green-200/50">
+                Starting at <span className="text-green-900">{data.startingApr}</span>
+            </div>
+
+            <div className={`w-16 h-16 rounded-xl flex items-center justify-center text-white ${data.colors.iconBg}`}>
+                {data.icon}
+            </div>
+
+            <h3 className="text-2xl font-bold text-dark-navy mt-4">{data.title}</h3>
+            <p className="text-gray-600 mt-2 text-sm flex-grow">{data.description}</p>
+            
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 text-sm">
+                {data.features.map(feature => (
+                    <li key={feature} className="flex items-center text-gray-700">
+                        <svg className="w-4 h-4 mr-2 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                        <span>{feature}</span>
+                    </li>
+                ))}
+            </ul>
+
+            <div className="mt-6 flex items-center space-x-4">
+                <button
+                    onClick={handleExploreClick}
+                    className="font-bold text-brand-purple hover:underline"
+                >
+                    Explore Options &rarr;
+                </button>
+                <button 
+                    onClick={() => onNavigate(data.page)}
+                    className="text-gray-700 bg-white font-semibold py-2 px-4 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors text-sm"
+                >
+                    Read More
+                </button>
+            </div>
+        </div>
+    );
+}
+
+const LoanSolutions: React.FC<{onNavigate: (page: Page) => void; onSearch: (filters: LoanFilters) => void;}> = ({ onNavigate, onSearch }) => {
   return (
     <section className="py-20 bg-light-bg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-4xl font-extrabold text-dark-navy">Comprehensive Loan Solutions</h2>
-        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-          Whatever your financial goal, we have a loan solution to help you achieve it.
-        </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+            <div className="inline-block bg-white text-sm text-gray-600 font-semibold px-6 py-3 rounded-full shadow-md border border-gray-200">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">&#10024;</span> Compare rates from multiple lenders with a single application — without affecting your credit score
+            </div>
+        </div>
         
-        {/* Tab Buttons */}
-        <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {tabData.map((tab) => (
-                <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as LoanCategory)}
-                    className={`p-6 rounded-2xl text-left transition-all duration-300 transform hover:-translate-y-1 ${
-                        activeTab === tab.id
-                            ? 'bg-gradient-primary text-white shadow-xl'
-                            : 'bg-white text-dark-navy shadow-lg border border-gray-100 hover:shadow-xl'
-                    }`}
-                >
-                    <div className={`p-3 rounded-lg inline-block ${activeTab === tab.id ? 'bg-white/20 text-white' : 'bg-indigo-100 text-brand-purple'}`}>
-                        {tab.icon}
-                    </div>
-                    <h3 className="text-xl font-bold mt-4">{tab.title}</h3>
-                </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {loanData.map((loan) => (
+                <LoanCard key={loan.title} data={loan} onNavigate={onNavigate} onSearch={onSearch} />
             ))}
         </div>
-
-        {/* Content Panel */}
-        {activeTabData && (
-            <div className="mt-8 bg-white p-8 rounded-2xl shadow-2xl border border-gray-100 text-left">
-                <div className="grid lg:grid-cols-5 gap-8">
-                    <div className="lg:col-span-2">
-                        <h3 className="text-2xl font-bold text-dark-navy">{activeTabData.title}</h3>
-                        <p className="mt-2 text-gray-600">{activeTabData.description}</p>
-                        <h4 className="mt-6 font-semibold text-dark-navy mb-2">Key Benefits:</h4>
-                        <ul className="space-y-2">
-                           {activeTabData.benefits.map(benefit => (
-                                <li key={benefit} className="flex items-center text-gray-600">
-                                    <svg className="w-4 h-4 mr-2 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                                    <span>{benefit}</span>
-                                </li>
-                           ))}
-                        </ul>
-                    </div>
-                    <div className="lg:col-span-3 lg:border-l lg:pl-8 border-gray-200">
-                        <div className="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 className="font-semibold text-dark-navy mb-3">Top Providers</h4>
-                                <div className="space-y-3">
-                                    {activeTabData.topProviders.map(provider => (
-                                        <div key={provider.name} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                            <div className={`flex-shrink-0 w-10 h-10 rounded-full ${provider.logoBg} flex items-center justify-center text-white font-bold`}>{provider.logoContent}</div>
-                                            <div>
-                                                <p className="font-bold text-dark-navy text-sm">{provider.name}</p>
-                                                <p className="text-xs text-gray-500">APR: {provider.apr}</p>
-                                                <p className="text-xs text-gray-500">Amount: {provider.amount}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-between">
-                                <button
-                                    onClick={() => onNavigate('providers')}
-                                    className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-indigo-50 group">
-                                    <p className="font-semibold text-sm text-brand-purple group-hover:underline">View More Loan Providers &rarr;</p>
-                                </button>
-                                <button
-                                    onClick={() => onNavigate(activeTabData.cta.page)}
-                                    className="mt-6 w-full bg-gradient-primary text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                                    {activeTabData.cta.text}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )}
       </div>
     </section>
   );

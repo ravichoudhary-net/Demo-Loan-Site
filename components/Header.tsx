@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Page } from '../App';
 
 const NavLink: React.FC<{ href?: string; onClick?: () => void; children: React.ReactNode; hasDropdown?: boolean }> = ({ href, onClick, children, hasDropdown }) => {
@@ -24,6 +24,21 @@ const NavLink: React.FC<{ href?: string; onClick?: () => void; children: React.R
 };
 
 const Header: React.FC<{onNavigate: (page: Page) => void}> = ({onNavigate}) => {
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsResourcesOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <header className="py-4">
       <div className="flex justify-between items-center">
@@ -37,9 +52,20 @@ const Header: React.FC<{onNavigate: (page: Page) => void}> = ({onNavigate}) => {
             <span className="font-bold text-xl text-dark-navy">Demo Loan Site</span>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
-            <NavLink onClick={() => onNavigate('providers')} hasDropdown>Loan Providers</NavLink>
-            <NavLink href="#" hasDropdown>Loan Types</NavLink>
-            <NavLink href="#" hasDropdown>Resources</NavLink>
+            <NavLink onClick={() => onNavigate('providers')}>Loan Providers</NavLink>
+            <NavLink href="#">Loan Types</NavLink>
+            <div className="relative" ref={dropdownRef}>
+              <button onClick={() => setIsResourcesOpen(!isResourcesOpen)} className="flex items-center text-gray-600 hover:text-brand-purple transition-colors">
+                Resources
+                <svg className={`ml-1 w-4 h-4 transition-transform ${isResourcesOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {isResourcesOpen && (
+                <div className="absolute top-full mt-2 w-48 bg-white rounded-lg shadow-xl border py-2 z-10">
+                  <a onClick={() => { onNavigate('calculators'); setIsResourcesOpen(false); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Calculators</a>
+                  <a onClick={() => { onNavigate('credit-health'); setIsResourcesOpen(false); }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Credit Health Center</a>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
         <div className="hidden md:flex items-center space-x-4">
